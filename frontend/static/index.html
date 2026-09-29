@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextTime • Smarter Travel & Experience Memory</title>
+<!-- Google Fonts & Material Symbols -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #60a5fa;
+    --primary-bg: #eff6ff;
+    --accent: #f59e0b;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --sidebar-bg: #0b1329;
+    --sidebar-card: rgba(255, 255, 255, 0.04);
+    --sidebar-card-hover: rgba(255, 255, 255, 0.08);
+    --sidebar-border: rgba(255, 255, 255, 0.07);
+    --sidebar-text: #f1f5f9;
+    --sidebar-muted: #94a3b8;
+    --border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-main);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* --------------------------------------------------------------------------
+   * Sidebar: Experience Memory & Categorization
+   * ------------------------------------------------------------------------ */
+  #sidebar {
+    width: 340px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 20;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar-header {
+    padding: 1.25rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--sidebar-border);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+  .brand-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #2563eb, #38bdf8);
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  }
+  .brand-tagline {
+    font-size: 0.75rem;
+    color: var(--sidebar-muted);
+    margin-top: 0.25rem;
+    font-weight: 500;
+  }
+
+  /* Filter & Search Bar */
+  .sidebar-controls {
+    padding: 0.9rem 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-box .material-symbols-outlined {
+    position: absolute;
+    left: 0.65rem;
+    font-size: 1.05rem;
+    color: var(--sidebar-muted);
+  }
+  .search-box input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--sidebar-border);
+    border-radius: var(--radius-sm);
+    padding: 0.45rem 0.6rem 0.45rem 2.2rem;
+    color: #fff;
+    font-size: 0.8rem;
+    outline: none;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .search-box input:focus {
+    border-color: var(--primary-light);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Category Filter Pills */
+  .category-pills {
+    display: flex;
+    gap: 0.35rem;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .category-pills::-webkit-scrollbar { display: none; }
+  .pill-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid transparent;
+    color: var(--sidebar-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.65rem;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.15s ease;
+  }
+  .pill-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .pill-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary-light);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+  }
+
+  .sidebar-sub {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sidebar-muted);
+    padding: 0.6rem 1.1rem 0.4rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .refresh-btn {
+    background: transparent;
+    border: none;
+    color: var(--sidebar-muted);
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+  .refresh-btn:hover { color: #fff; }
+
+  /* Experience Cards */
+  #exp-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.4rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .exp-card {
+    background: var(--sidebar-card);
+    border: 1px solid var(--sidebar-border);
+    border-radius: 10px;
+    padding: 0.8rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .exp-card:hover {
+    background: var(--sidebar-card-hover);
+    border-color: rgba(96, 165, 250, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .exp-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+  .exp-card-cat {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .cat-travel { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+  .cat-events { background: rgba(244, 114, 182, 0.15); color: #f472b6; }
+  .cat-health { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+  .cat-work { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+  .cat-other { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+
+  .exp-card-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f8fafc;
+    line-height: 1.3;
+  }
+  .exp-card-lesson {
+    font-size: 0.77rem;
+    color: var(--sidebar-muted);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .exp-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.15rem;
+  }
+  .exp-tag {
+    background: rgba(96, 165, 250, 0.12);
+    color: #93c5fd;
+    font-size: 0.65rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .sidebar-footer {
+    padding: 0.85rem 1rem;
+    border-top: 1px solid var(--sidebar-border);
+    font-size: 0.73rem;
+    color: var(--sidebar-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,0,0,0.15);
+  }
+
+  /* --------------------------------------------------------------------------
+   * Main Workspace & Chat
+   * ------------------------------------------------------------------------ */
+  #main-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-width: 0;
+    position: relative;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .mobile-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 6px;
+    cursor: pointer;
+    color: var(--text-main);
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #ecfdf5;
+    color: #059669;
+    font-size: 0.73rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    border: 1px solid #d1fae5;
+  }
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: statusPulse 2s infinite;
+  }
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  /* Chat Log & Message Streams */
+  #log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    max-width: 860px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Welcome Hero when chat is fresh */
+  .hero-welcome {
+    margin: auto 0;
+    text-align: center;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #dbeafe, #eff6ff);
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.08);
+  }
+  .hero-welcome h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.5rem;
+    color: var(--text-main);
+  }
+  .hero-welcome p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 0 1.75rem;
+    line-height: 1.5;
+  }
+
+  /* Quick Suggestion Chips */
+  .starter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    max-width: 720px;
+  }
+  .chip-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .chip-btn:hover {
+    border-color: var(--primary-light);
+    color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.08);
+  }
+  .chip-btn .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: var(--primary);
+  }
+
+  /* Messages & Bubbles */
+  .msg {
+    margin: 0.85rem 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .msg.user { align-items: flex-end; }
+  .msg.agent { align-items: flex-start; }
+  .bubble {
+    display: inline-block;
+    padding: 0.9rem 1.2rem;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    text-align: left;
+    max-width: 90%;
+    white-space: pre-wrap;
+    line-height: 1.55;
+    font-size: 0.94rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  }
+  .msg.user .bubble {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: #fff;
+    border: none;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  }
+  .msg.agent .bubble {
+    border-bottom-left-radius: 4px;
+  }
+  .bubble.rich {
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    max-width: 100%;
+  }
+
+  /* Travel Loading Animation */
+  .travel-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.4rem 0.2rem;
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .loading-compass {
+    display: inline-flex;
+    animation: spinCompass 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    font-size: 1.5rem;
+    color: var(--primary-light);
+  }
+  @keyframes spinCompass {
+    0% { transform: rotate(0deg); }
+    35% { transform: rotate(190deg); }
+    55% { transform: rotate(160deg); }
+    85% { transform: rotate(370deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .loading-dots {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .loading-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    animation: dotPulse 1.4s infinite ease-in-out both;
+  }
+  .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+  .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+  @keyframes dotPulse {
+    0%, 80%, 100% { transform: scale(0.4); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Chat Input Section */
+  .chat-bottom {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 0.75rem 1.5rem 1rem;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+  }
+  form {
+    display: flex;
+    gap: 0.6rem;
+    max-width: 860px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .input-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  input {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    outline: none;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    background: #f8fafc;
+  }
+  input:focus {
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+  button.send-btn {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0 1.3rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
+    transition: all 0.15s ease;
+  }
+  button.send-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.35);
+  }
+
+  /* --------------------------------------------------------------------------
+   * A2UI Rendered Component Styles
+   * ------------------------------------------------------------------------ */
+  .a2card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.35rem;
+    background: var(--surface);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    max-width: 100%;
+    margin-top: 0.5rem;
+  }
+  .a2card + .a2card, .a2col > .a2card { margin-top: 0.75rem; }
+  .a2col { display: flex; flex-direction: column; gap: 0.6rem; }
+  .a2row { display: flex; flex-direction: row; gap: 0.65rem; align-items: center; flex-wrap: wrap; }
+  .a2row.between { justify-content: space-between; }
+  
+  .a2text { margin: 0; line-height: 1.55; font-size: 0.95rem; color: #1e293b; }
+  .a2text strong, .a2text b { font-weight: 700; color: #0f172a; }
+  .a2text.a2-h1 { font-size: 1.45rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem; letter-spacing: -0.02em; }
+  .a2text.a2-h2 { font-size: 1.22rem; font-weight: 700; color: #1d4ed8; margin-top: 0.55rem; margin-bottom: 0.25rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.3rem; }
+  .a2text.a2-h3 { font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-top: 0.35rem; }
+  .a2text.a2-h4 { font-size: 0.96rem; font-weight: 600; color: #334155; }
+  .a2text.a2-caption { font-size: 0.82rem; color: #64748b; font-style: italic; }
+  .a2divider { border: none; border-top: 1px solid var(--border); margin: 0.75rem 0; width: 100%; }
+  
+  /* Maps Image Container with clickable preview badge */
+  .a2img-container {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin: 0.65rem 0;
+    cursor: zoom-in;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+    transition: transform 0.18s ease;
+  }
+  .a2img-container:hover {
+    transform: scale(1.008);
+  }
+  .a2img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .a2img-overlay {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Lightbox Modal for Map & Image exploration */
+  #lightbox-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  #lightbox-modal.open {
+    display: flex;
+  }
+  .lightbox-content {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  .lightbox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lightbox-title {
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-main);
+  }
+  .lightbox-close {
+    background: #f1f5f9;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+  }
+  .lightbox-close:hover {
+    background: #e2e8f0;
+    color: var(--text-main);
+  }
+  #lightbox-img {
+    width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+  }
+  .lightbox-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+  .lightbox-btn {
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* Responsive for mobile & tablets */
+  @media (max-width: 860px) {
+    #sidebar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      box-shadow: 5px 0 25px rgba(0,0,0,0.3);
+    }
+    #sidebar.mobile-open {
+      transform: translateX(0);
+    }
+    .mobile-toggle {
+      display: flex;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Lightbox Modal for Map enlargement -->
+<div id="lightbox-modal">
+  <div class="lightbox-content">
+    <div class="lightbox-header">
+      <div class="lightbox-title">
+        <span class="material-symbols-outlined" style="color:var(--primary);">map</span>
+        <span>Google Maps Übersicht</span>
+      </div>
+      <button class="lightbox-close" id="lightbox-close">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <img id="lightbox-img" src="" alt="Enlarged Map View">
+    <div class="lightbox-actions">
+      <a id="lightbox-gmaps-link" class="lightbox-btn" href="#" target="_blank" rel="noopener">
+        <span>In Google Maps öffnen</span>
+        <span class="material-symbols-outlined" style="font-size:16px;">open_in_new</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Side-Menu: Past Experiences & Categories -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="brand">
+      <div class="brand-icon">
+        <span class="material-symbols-outlined" style="font-size:22px;">explore</span>
+      </div>
+      <div>
+        <div>NextTime</div>
+        <div class="brand-tagline">Experience & Travel Memory</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Category Filters -->
+  <div class="sidebar-controls">
+    <div class="search-box">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" id="search-input" placeholder="Lektionen durchsuchen…">
+    </div>
+    <div class="category-pills" id="category-pills">
+      <button class="pill-btn active" data-cat="all">
+        <span class="material-symbols-outlined" style="font-size:14px;">auto_awesome</span>
+        <span>Alle</span>
+      </button>
+      <button class="pill-btn" data-cat="travel">
+        <span class="material-symbols-outlined" style="font-size:14px;">flight</span>
+        <span>Reisen</span>
+      </button>
+      <button class="pill-btn" data-cat="events">
+        <span class="material-symbols-outlined" style="font-size:14px;">celebration</span>
+        <span>Events</span>
+      </button>
+      <button class="pill-btn" data-cat="health">
+        <span class="material-symbols-outlined" style="font-size:14px;">self_improvement</span>
+        <span>Lifestyle</span>
+      </button>
+      <button class="pill-btn" data-cat="work">
+        <span class="material-symbols-outlined" style="font-size:14px;">work</span>
+        <span>Arbeit</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="sidebar-sub">
+    <span id="exp-count-label">Meine Lektionen</span>
+    <button class="refresh-btn" id="refresh-exp" title="Erfahrungen neu laden">
+      <span class="material-symbols-outlined" style="font-size:17px;">sync</span>
+    </button>
+  </div>
+
+  <div id="exp-list">
+    <div style="padding:1rem;color:var(--sidebar-muted);font-size:0.85rem;">Lade Erfahrungen…</div>
+  </div>
+
+  <div class="sidebar-footer">
+    <span class="material-symbols-outlined" style="font-size:18px;color:#38bdf8;">verified_user</span>
+    <span>Grounded auf persönlichem Firestore-Speicher</span>
+  </div>
+</aside>
+
+<!-- Main Chat Panel -->
+<div id="main-panel">
+  <header>
+    <div class="header-left">
+      <button class="mobile-toggle" id="menu-toggle" title="Menü">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <div>
+        <div style="font-weight:700;font-size:1.02rem;color:var(--text-main);">NextTime Reise- & Lebensberater</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">Lerne aus vergangenen Fehlern & plane smartere Reisen</div>
+      </div>
+    </div>
+    <div class="header-badge">
+      <span class="pulse-dot"></span>
+      <span>Gemini 2.5 Live</span>
+    </div>
+  </header>
+
+  <div id="log">
+    <!-- Welcome Hero Screen shown before any user interaction -->
+    <div class="hero-welcome" id="welcome-hero">
+      <div class="hero-icon">
+        <span class="material-symbols-outlined" style="font-size:32px;">flight_takeoff</span>
+      </div>
+      <h2>Willkommen bei NextTime! 🌍</h2>
+      <p>Ich kenne deine bisherigen Reise-Erfahrungen, Vorlieben und Fehler aus der Vergangenheit. Woran möchtest du heute feilen?</p>
+      
+      <div class="starter-chips">
+        <button class="chip-btn" data-prompt="Welche Orte in Kalifornien habe ich bisher besucht? Zeige sie mir auf einer Karte.">
+          <span class="material-symbols-outlined">map</span>
+          <span>Orte in Kalifornien & Karte</span>
+        </button>
+        <button class="chip-btn" data-prompt="Ich plane 14 Tage USA im Spätsommer. Welche Packtipps hast du aus meinen bisherigen Fehlern gelernt?">
+          <span class="material-symbols-outlined">luggage</span>
+          <span>Packtipps für die USA</span>
+        </button>
+        <button class="chip-btn" data-prompt="Welche Highlights empfiehlst du für San Diego und Umgebung? Bitte mit Karte.">
+          <span class="material-symbols-outlined">location_on</span>
+          <span>Highlights San Diego</span>
+        </button>
+        <button class="chip-btn" data-prompt="Plane mir einen 3-Tage-Wochenendtrip nach Rumänien. Worauf sollte ich achten?">
+          <span class="material-symbols-outlined">hotel</span>
+          <span>Wochenend-Trip planen</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-bottom">
+    <form id="form">
+      <div class="input-wrapper">
+        <input id="input" placeholder="Frage nach vergangenen Trips, Packtipps oder plane deinen nächsten Urlaub…" autocomplete="off" autofocus>
+      </div>
+      <button class="send-btn" type="submit">
+        <span>Senden</span>
+        <span class="material-symbols-outlined" style="font-size:18px;">send</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+const log = document.getElementById("log");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const expList = document.getElementById("exp-list");
+const refreshBtn = document.getElementById("refresh-exp");
+const searchInput = document.getElementById("search-input");
+const categoryPills = document.getElementById("category-pills");
+const expCountLabel = document.getElementById("exp-count-label");
+const welcomeHero = document.getElementById("welcome-hero");
+const menuToggle = document.getElementById("menu-toggle");
+const sidebar = document.getElementById("sidebar");
+
+// Lightbox elements
+const lightboxModal = document.getElementById("lightbox-modal");
+const lightboxImg = document.getElementById("lightbox-img");
+const lightboxClose = document.getElementById("lightbox-close");
+const lightboxLink = document.getElementById("lightbox-gmaps-link");
+
+let allExperiences = [];
+let currentCategory = "all";
+let currentSearch = "";
+
+// Mobile sidebar toggle
+menuToggle.addEventListener("click", () => {
+  sidebar.classList.toggle("mobile-open");
+});
+
+// Lightbox close handler
+lightboxClose.addEventListener("click", () => {
+  lightboxModal.classList.remove("open");
+});
+lightboxModal.addEventListener("click", (e) => {
+  if (e.target === lightboxModal) lightboxModal.classList.remove("open");
+});
+
+function openLightbox(src) {
+  lightboxImg.src = src;
+  lightboxLink.href = src.includes("maps.googleapis.com") ? src : "https://maps.google.com";
+  lightboxModal.classList.add("open");
+}
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function bubble(who) {
+  if (welcomeHero && welcomeHero.parentNode) {
+    welcomeHero.remove();
+  }
+  const m = el("div", "msg " + who);
+  const b = el("div", "bubble");
+  m.appendChild(b);
+  log.appendChild(m);
+  log.scrollTop = log.scrollHeight;
+  return b;
+}
+
+/* ----------------------------------------------------------------------------
+ * Load & Filter Experiences
+ * -------------------------------------------------------------------------- */
+async function loadExperiences() {
+  try {
+    const res = await fetch("/api/experiences");
+    const data = await res.json();
+    allExperiences = data.experiences || [];
+    renderExperiencesList();
+  } catch (err) {
+    expList.innerHTML = '<div style="padding:1rem;color:#f87171;font-size:0.85rem;">Fehler beim Laden der Erfahrungen.</div>';
+  }
+}
+
+function renderExperiencesList() {
+  expList.innerHTML = "";
+  
+  const filtered = allExperiences.filter(exp => {
+    const cat = (exp.category || "other").toLowerCase();
+    const matchesCat = currentCategory === "all" || cat === currentCategory;
+    if (!matchesCat) return false;
+
+    if (!currentSearch) return true;
+    const q = currentSearch.toLowerCase();
+    const titleMatch = (exp.title || "").toLowerCase().includes(q);
+    const lessonMatch = (exp.lesson || "").toLowerCase().includes(q);
+    const tagsMatch = Array.isArray(exp.tags) && exp.tags.some(t => t.toLowerCase().includes(q));
+    return titleMatch || lessonMatch || tagsMatch;
+  });
+
+  expCountLabel.textContent = `Lektionen (${filtered.length})`;
+
+  if (!filtered.length) {
+    expList.innerHTML = '<div style="padding:1.5rem 0.5rem;text-align:center;color:var(--sidebar-muted);font-size:0.82rem;">Keine passenden Erfahrungen gefunden.</div>';
+    return;
+  }
+
+  filtered.forEach(exp => {
+    const card = el("div", "exp-card");
+    const header = el("div", "exp-card-header");
+    
+    const catSpan = el("span", "exp-card-cat");
+    const rawCat = (exp.category || "other").toLowerCase();
+    catSpan.classList.add("cat-" + (["travel","events","health","work"].includes(rawCat) ? rawCat : "other"));
+    catSpan.textContent = rawCat;
+    header.appendChild(catSpan);
+    card.appendChild(header);
+
+    const title = el("div", "exp-card-title", exp.title || "Erfahrung");
+    const lesson = el("div", "exp-card-lesson", exp.lesson || exp.situation || "");
+    card.appendChild(title);
+    card.appendChild(lesson);
+
+    if (exp.tags && exp.tags.length) {
+      const tagsDiv = el("div", "exp-tags");
+      exp.tags.slice(0, 3).forEach(t => {
+        tagsDiv.appendChild(el("span", "exp-tag", "#" + t));
+      });
+      card.appendChild(tagsDiv);
+    }
+
+    card.addEventListener("click", () => {
+      if (window.innerWidth <= 860) sidebar.classList.remove("mobile-open");
+      submitMessage(`Was haben wir aus "${exp.title}" gelernt und was empfiehlst du für das nächste Mal?`);
+    });
+
+    expList.appendChild(card);
+  });
+}
+
+// Category filter button clicks
+categoryPills.addEventListener("click", (e) => {
+  const btn = e.target.closest(".pill-btn");
+  if (!btn) return;
+  categoryPills.querySelectorAll(".pill-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  currentCategory = btn.getAttribute("data-cat");
+  renderExperiencesList();
+});
+
+// Search input
+searchInput.addEventListener("input", (e) => {
+  currentSearch = e.target.value.trim();
+  renderExperiencesList();
+});
+
+refreshBtn.addEventListener("click", loadExperiences);
+loadExperiences();
+
+// Handle click on starter suggestion chips
+document.addEventListener("click", (e) => {
+  const chip = e.target.closest(".chip-btn");
+  if (!chip) return;
+  const prompt = chip.getAttribute("data-prompt");
+  if (prompt) submitMessage(prompt);
+});
+
+/* ----------------------------------------------------------------------------
+ * Markdown & Visual Formatting Helper
+ * -------------------------------------------------------------------------- */
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderMarkdown(md) {
+  if (!md) return "";
+  let text = escapeHtml(md);
+
+  // Bold: **text** or __text__
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+  // Italic: *text* or _text_
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  text = text.replace(/_(.*?)_/g, '<em>$1</em>');
+
+  // Headers: ###, ##, #
+  text = text.replace(/^### (.*$)/gim, '<h3 style="margin:0.5rem 0 0.2rem;font-size:1.05rem;font-weight:700;color:#1e3a8a;">$1</h3>');
+  text = text.replace(/^## (.*$)/gim, '<h2 style="margin:0.6rem 0 0.3rem;font-size:1.18rem;font-weight:700;color:#1e40af;border-bottom:1px solid #e2e8f0;padding-bottom:0.2rem;">$1</h2>');
+  text = text.replace(/^# (.*$)/gim, '<h1 style="margin:0.8rem 0 0.4rem;font-size:1.35rem;font-weight:800;color:#0f172a;">$1</h1>');
+
+  // Numbered list: 1. text or 1. Spot: description
+  text = text.replace(/^\s*(\d+)\.\s+(.*?)(:\s+|$)(.*$)/gim, function(match, num, title, col, rest) {
+    if (col) {
+      return '<div style="display:flex;gap:0.4rem;margin:0.35rem 0;"><span style="color:#2563eb;font-weight:700;">' + num + '.</span><span><strong style="color:#0f172a;">' + title + ':</strong> ' + rest + '</span></div>';
+    } else {
+      return '<div style="display:flex;gap:0.4rem;margin:0.35rem 0;"><span style="color:#2563eb;font-weight:700;">' + num + '.</span><span>' + title + '</span></div>';
+    }
+  });
+
+  // Bullet points: • or - Spot: description
+  text = text.replace(/^\s*[-*•]\s+(.*?)(:\s+|$)(.*$)/gim, function(match, title, col, rest) {
+    if (col) {
+      return '<div style="display:flex;gap:0.5rem;margin:0.3rem 0;"><span style="color:#2563eb;font-weight:bold;">•</span><span><strong style="color:#0f172a;">' + title + ':</strong> ' + rest + '</span></div>';
+    } else {
+      return '<div style="display:flex;gap:0.5rem;margin:0.3rem 0;"><span style="color:#2563eb;font-weight:bold;">•</span><span>' + title + '</span></div>';
+    }
+  });
+
+  // Line breaks
+  text = text.replace(/\n/g, '<br>');
+
+  return text;
+}
+
+/* ----------------------------------------------------------------------------
+ * A2UI mini-renderer
+ * -------------------------------------------------------------------------- */
+function boundStr(v) {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v.literalString === "string") return v.literalString;
+  return "";
+}
+
+function childIds(props) {
+  const ids = [];
+  if (props && typeof props.child === "string") ids.push(props.child);
+  const ch = props && props.children;
+  if (ch && Array.isArray(ch.explicitList)) for (const c of ch.explicitList) if (typeof c === "string") ids.push(c);
+  return ids;
+}
+
+function iconName(n) {
+  return String(n || "").replace(/([a-z0-9])([A-Z])/g, "$1_$2").replace(/\s+/g, "_").toLowerCase();
+}
+
+function buildNode(id, comps, seen) {
+  if (!id || seen.has(id)) return null;
+  seen.add(id);
+  const spec = comps[id];
+  if (!spec || typeof spec !== "object") return null;
+  const type = Object.keys(spec)[0];
+  const props = spec[type] || {};
+  const kids = () => childIds(props).map(cid => buildNode(cid, comps, seen)).filter(Boolean);
+
+  switch (type) {
+    case "Card": {
+      const d = el("div", "a2card");
+      kids().forEach(n => d.appendChild(n));
+      return d;
+    }
+    case "Column":
+    case "List": {
+      const horizontal = type === "List" && props.direction === "horizontal";
+      const d = el("div", horizontal ? "a2row" : "a2col");
+      kids().forEach(n => d.appendChild(n));
+      return d;
+    }
+    case "Row": {
+      const d = el("div", "a2row" + (props.distribution === "spaceBetween" ? " between" : ""));
+      kids().forEach(n => d.appendChild(n));
+      return d;
+    }
+    case "Text": {
+      const t = el("div", "a2text");
+      const hint = String(props.usageHint || "body").toLowerCase();
+      if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(hint)) t.classList.add("a2-" + hint);
+      else if (hint === "caption") t.classList.add("a2-caption");
+      const rawText = boundStr(props.text);
+      t.innerHTML = renderMarkdown(rawText);
+      return t;
+    }
+    case "Divider":
+      return el("hr", "a2divider");
+    case "Image": {
+      const src = boundStr(props.url || props.src);
+      if (!/^https?:\/\//i.test(src)) return null;
+      
+      const container = el("div", "a2img-container");
+      const img = el("img", "a2img");
+      img.src = src;
+      img.alt = boundStr(props.alt) || "Map view";
+      
+      const overlay = el("div", "a2img-overlay");
+      overlay.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">zoom_in</span> Vergrößern';
+      
+      container.appendChild(img);
+      container.appendChild(overlay);
+      container.addEventListener("click", () => openLightbox(src));
+      return container;
+    }
+    case "Icon": {
+      const s = el("span", "material-symbols-outlined");
+      s.textContent = iconName(boundStr(props.name) || props.name);
+      return s;
+    }
+    default:
+      return null;
+  }
+}
+
+function renderSurface(messages, container) {
+  const comps = {};
+  const roots = [];
+  for (const m of messages) {
+    if (m.beginRendering && typeof m.beginRendering.root === "string") roots.push(m.beginRendering.root);
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) for (const c of su.components) if (c && c.id && c.component) comps[c.id] = c.component;
+  }
+  let rootIds = roots.filter(r => comps[r]);
+  if (rootIds.length === 0) {
+    const referenced = new Set();
+    for (const id in comps) {
+      const spec = comps[id];
+      childIds(spec[Object.keys(spec)[0]] || {}).forEach(c => referenced.add(c));
+    }
+    rootIds = Object.keys(comps).filter(id => !referenced.has(id));
+  }
+  let drew = false;
+  for (const rid of rootIds) {
+    const node = buildNode(rid, comps, new Set());
+    if (node) { container.appendChild(node); drew = true; }
+  }
+  return drew;
+}
+
+function flattenText(messages) {
+  const out = [];
+  for (const m of messages) {
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) {
+      for (const c of su.components) {
+        if (c && c.component && c.component.Text) out.push(boundStr(c.component.Text.text));
+      }
+    }
+  }
+  return out.join("\n").trim();
+}
+
+function renderReply(b, parts) {
+  b.textContent = "";
+  const texts = parts.filter(p => p && (p.kind === "text" || (!p.kind && p.text))).map(p => p.text || "");
+  const a2ui = parts.filter(p => p && p.kind === "a2ui" && p.data).map(p => p.data);
+
+  const textStr = texts.join("\n").trim();
+  if (textStr) {
+    const textWrapper = el("div");
+    textWrapper.innerHTML = renderMarkdown(textStr);
+    b.appendChild(textWrapper);
+  }
+
+  if (a2ui.length) {
+    b.classList.add("rich");
+    if (!renderSurface(a2ui, b)) {
+      b.appendChild(el("div", null, flattenText(a2ui) || "(no card content)"));
+    }
+  }
+  if (!b.childNodes.length) b.textContent = "(no response)";
+  log.scrollTop = log.scrollHeight;
+}
+
+async function submitMessage(text) {
+  if (!text) return;
+  bubble("user").textContent = text;
+  input.value = "";
+  const b = bubble("agent");
+  b.innerHTML = `
+    <div class="travel-loading">
+      <span class="material-symbols-outlined loading-compass">explore</span>
+      <span>NextTime durchsucht deine Erfahrungen & plant...</span>
+      <div class="loading-dots">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+    </div>
+  `;
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+    const raw = await res.text();
+    let data;
+    try { data = JSON.parse(raw); }
+    catch { throw new Error(`Server returned non-JSON (HTTP ${res.status}). ${raw.slice(0, 300)}`); }
+    renderReply(b, data.parts || []);
+  } catch (e) {
+    b.textContent = "Error: " + e.message;
+  }
+}
+
+form.addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  submitMessage(input.value.trim());
+});
+</script>
+</body>
+</html>
